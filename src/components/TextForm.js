@@ -1,75 +1,40 @@
-import React,{useState} from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
+import {Link} from 'react-router-dom';
 
-
-
-export default function TextForm(props) {
-const handleUpClick = ()=>{
-  console.log("Uppercase was clicked:" +text);
-  let newText= text.toUpperCase();
-  setText(newText);
-  props.showAlert("Converted to uppercase", "success");
-}
-
-const handleLoClick = ()=>{
-  console.log("Lowercase was clicked:" +text);
-  let newText= text.toLowerCase();
-  setText(newText);
-  props.showAlert("Converted to lowercase", "success");
-}
-
-const handleReverseClick = () => {
-  const reverse = text.split("").reverse().join("");
-  setText(reverse);
-  props.showAlert("Reversed successfully", "success");
-};
-
-const handleCopy =() => {
-  var text = document.getElementById("myBox");
-  text.select();
-  navigator.clipboard.writeText(text.value);
-  props.showAlert("Copied to clipboard", "success");
-}
-
-const handleClearClick = () => {
-  setText(""); // Clear state
-  props.showAlert("Cleared successfully", "success");
-};
-
-const handleExtraSpaces = ()=> {
-  let newText = text.split(/[ ]+/);
-  setText(newText.join(" "))
-  props.showAlert("Extra spaces removed", "success");
-}
-
-const handleOnChange =(event)=>{
-  console.log("On change");
-  setText(event.target.value)
-}
-
-const [text, setText] = useState('');
-
+export default function Navbar(props) {
 return (
-<>
-<div className="container" style={{backgroundColor: props.mode==='dark'?'grey':'black'}}>
-<h1>{props.heading}</h1>
-<div className="mb-3">
-<textarea className="form-control" value={text} onChange={handleOnChange} style={{backgroundColor: props.mode==='dark'?'grey':'black'}} id="myBox" rows="8"></textarea>
+<nav className={`navbar navbar-expand-lg navbar-${props.mode} bg-${props.mode}`}>
+<div className="container-fluid">
+<Link className="navbar-brand" to="/">{props.title}</Link>
+<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<span className="navbar-toggler-icon"></span>
+</button>
+<div className="collapse navbar-collapse" id="navbarSupportedContent">
+<ul className="navbar-nav me-auto mb-2 mb-lg-0">
+  <li className="nav-item">
+    <Link className="nav-link active" aria-current="page" to="/">Home</Link>
+  </li>
+  <li className="nav-item">
+    <Link className="nav-link" to="/about">{props.aboutText}</Link>
+  </li>
+  </ul>
+  <form className="d-flex" role="search">
+  <input className="form-control mx-2" type="search" placeholder="Search" aria-label="Search"/>
+  <button className="btn btn-outline-primary" type="submit">Search</button>
+  </form>
+  <div className={`form-check form-switch  text-${props.mode==='light'?'dark':'light'}`}>
+<input className="form-check-input mx-1 my-2" onClick={props.toggleMode} type="checkbox" role="switch" id="flexSwitchCheckDefault"/>
+<label className="form-check-label" htmlFor="flexSwitchCheckDefault">Enable Dark Mode</label>
 </div>
-<button className="btn btn-primary mx-2" onClick={handleUpClick}>Convert to UpperCase</button>
-<button className="btn btn-primary mx-2" onClick={handleLoClick}>Convert to LowerCase</button>
-<button className="btn btn-primary mx-2" onClick={handleReverseClick}>Reverse</button>
-<button className="btn btn-primary mx-2" onClick={handleClearClick}>Clear</button>
-<button className="btn btn-primary mx-2 my-2" onClick={handleCopy}>Copy Text</button>
-<button className="btn btn-primary mx-2 my-2" onClick={handleExtraSpaces}>Remove Extra Spaces</button>
+</div>
+</div>
+</nav>
 
-</div>
-<div className="container my-3"  style={{backgroundColor: props.mode==='dark' ?'grey':'black'}}>
-<h1>Your text summary</h1>
-<p>{text.split(" ").length} words and {text.length} characters</p>
-<p>{0.008 * text.split(" ").length} minutes</p>
-<h2>Preview</h2>
-<p>{text.length>0?text:"Enter something in the textbox above to preview it here."} </p>
-</div>
-</>
-  )
+)
 }
+
+Navbar.propTypes = {title:PropTypes.string.isRequired,
+aboutText:PropTypes.string.isRequired}
+Navbar.defaulProps = {title:'Set title here',
+aboutText:'About text here'};
